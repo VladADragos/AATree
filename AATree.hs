@@ -22,7 +22,6 @@ module AATree (
 -- AA search trees
 
 data AATree a = Empty   
-               
               | Node { 
                   level :: Int,
                   left :: AATree a,
@@ -38,7 +37,12 @@ emptyTree = Empty
 
 
 get :: Ord a => a -> AATree a -> Maybe a
-get = error "get not implemented"
+get _ Empty = Nothing
+get a (Node _ left value right) 
+  | a>value =get a right   
+  | a<value =get a left   
+  | a == value = Just a   
+
 
 -- You may find it helpful to define
 
@@ -48,6 +52,7 @@ insert = error "insert not implemented"
 
 split :: AATree a -> AATree a
 split = error "insert not implemented"
+
 skew  :: AATree a -> AATree a
 skew  =error "insert not implemented"
 
@@ -56,19 +61,22 @@ inorder = error "inorder not implemented"
 
 size :: AATree a -> Int
 size (Empty) = 0
-size (Node _ Empty _ Empty) = 1
 size (Node _ a _ b) = 1 + size a + size b
--- size (Node _ a _ _) = 1 + size a
--- size (Node _ _ _ b) = 1 + size b
 
---size':: AATree a -> Int -> Int
---size' (Node _ _ _ r) x = 2**x + size' r x+1
 
 height :: AATree a -> Int
 height Empty = 0
-height (Node _ _ _ Empty) = 1
 height (Node _ _ _ r) = 1 + height r  
 
+
+
+-- OBS inte från labben ville testa hur bst insert fungerar
+bstInsert:: Ord a => a-> AATree a -> AATree a
+bstInsert a Empty = Node 1 Empty a Empty 
+bstInsert  a (Node level left value right) 
+          | a==value    =Node level left value right   
+          | a>value    =Node level left  value (bstInsert a right)    
+          | a<value    =Node level (bstInsert a left) value right    
 
 
 --------------------------------------------------------------------------------
